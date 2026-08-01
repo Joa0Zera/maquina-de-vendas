@@ -231,7 +231,6 @@ async function ProductDetailContent({ id, organizationId, tab }: { id: string; o
                     label: "Produto",
                     description: "Configurações básicas do produto",
                     completed: product.status === "published",
-                    icon: Package,
                     action: { label: "Configurar", href: `/products/${id}/edit` },
                   },
                   {
@@ -239,8 +238,7 @@ async function ProductDetailContent({ id, organizationId, tab }: { id: string; o
                     label: "Oferta",
                     description: "Oferta de vendas gerada",
                     completed: !!offer,
-                    icon: FileText,
-                    action: offer 
+                    action: offer
                       ? { label: "Ver", href: `/offers/${offer.id}` }
                       : { label: "Criar", href: "/product-factory" },
                   },
@@ -249,8 +247,7 @@ async function ProductDetailContent({ id, organizationId, tab }: { id: string; o
                     label: "Landing",
                     description: "Página de vendas pública",
                     completed: product.status === "published",
-                    icon: Globe,
-                    action: product.status === "published" 
+                    action: product.status === "published"
                       ? { label: "Abrir", href: `/p/${product.slug}` }
                       : undefined,
                   },
@@ -259,8 +256,7 @@ async function ProductDetailContent({ id, organizationId, tab }: { id: string; o
                     label: "Checkout",
                     description: "URL de checkout configurada",
                     completed: !!product.checkoutUrl,
-                    icon: CreditCard,
-                    action: !product.checkoutUrl 
+                    action: !product.checkoutUrl
                       ? { label: "Configurar", href: `/products/${id}/edit` }
                       : undefined,
                   },
@@ -269,10 +265,9 @@ async function ProductDetailContent({ id, organizationId, tab }: { id: string; o
                     label: "Copy",
                     description: "Assets de copywriting",
                     completed: !!copy,
-                    icon: Copy,
-                    action: copy 
+                    action: copy
                       ? { label: "Ver", href: `/products/${id}/copy` }
-                      : research 
+                      : research
                       ? { label: "Gerar", href: "#" }
                       : undefined,
                   },
@@ -281,10 +276,9 @@ async function ProductDetailContent({ id, organizationId, tab }: { id: string; o
                     label: "Distribuição",
                     description: "Canais de distribuição orgânica",
                     completed: !!organic,
-                    icon: Users,
-                    action: organic 
+                    action: organic
                       ? { label: "Ver", href: `/products/${id}/organic` }
-                      : copy 
+                      : copy
                       ? { label: "Gerar", href: "#" }
                       : undefined,
                   },
@@ -293,8 +287,7 @@ async function ProductDetailContent({ id, organizationId, tab }: { id: string; o
                     label: "Inteligência",
                     description: "Relatório de inteligência",
                     completed: !!intelligence,
-                    icon: Brain,
-                    action: intelligence 
+                    action: intelligence
                       ? { label: "Ver", href: `/products/${id}/intelligence` }
                       : { label: "Gerar", href: "#" },
                   },

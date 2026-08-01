@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { CheckCircle2, Circle, LayoutDashboard, Package, FileText, Globe, CreditCard, Copy, Users, Brain, Settings } from "lucide-react";
+import { CheckCircle2, Circle } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -11,7 +11,6 @@ interface ChecklistItem {
   label: string;
   description: string;
   completed: boolean;
-  icon: any;
   action?: {
     label: string;
     href: string;
@@ -47,7 +46,6 @@ export function ProjectChecklist({ productId, items, showProgress = true }: Proj
 
       <div className="space-y-2">
         {sortedItems.map((item) => {
-          const Icon = item.icon;
           return (
             <Link
               key={item.id}
