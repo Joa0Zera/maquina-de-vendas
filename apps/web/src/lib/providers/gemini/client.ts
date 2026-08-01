@@ -14,7 +14,7 @@ export class GeminiClient {
   initialize(apiKey: string): void {
     this.apiKey = apiKey;
     this.client = new GoogleGenerativeAI(apiKey);
-    this.model = this.client.getGenerativeModel({ model: "gemini-2.0-flash" });
+    this.model = this.client.getGenerativeModel({ model: "gemini-3.1-flash-lite" });
   }
 
   isInitialized(): boolean {
