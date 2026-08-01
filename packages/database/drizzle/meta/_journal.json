@@ -29,6 +29,13 @@
       "when": 1785642100000,
       "tag": "0003_missing_tables_and_columns",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1785642200000,
+      "tag": "0004_campaigns_landing_pages_columns",
+      "breakpoints": true
     }
   ]
 }
