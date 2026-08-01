@@ -15,6 +15,20 @@
       "when": 1780082949368,
       "tag": "0001_mvp_phase1",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1785642000000,
+      "tag": "0002_products_cakto_columns",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1785642100000,
+      "tag": "0003_missing_tables_and_columns",
+      "breakpoints": true
     }
   ]
 }
