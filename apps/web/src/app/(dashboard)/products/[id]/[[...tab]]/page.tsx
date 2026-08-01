@@ -6,6 +6,7 @@ import { generateTrafficResearchAction } from "@/actions/traffic";
 import { generateCopyAssetsAction } from "@/actions/copy";
 import { generateIntelligenceReportAction } from "@/actions/intelligence";
 import { generateOrganicDistributionAction } from "@/actions/organic-distribution";
+import { syncProductWithCaktoAction } from "@/actions/checkout";
 import { requireOrganization } from "@/lib/session";
 import { getSmartNextAction } from "@/lib/launch-assistant";
 import Link from "next/link";
@@ -391,12 +392,29 @@ async function ProductDetailContent({ id, organizationId, tab }: { id: string; o
                   </a>
                 </div>
               </div>
+            ) : offer ? (
+              <div className="border border-zinc-800 rounded-xl p-6 bg-zinc-950 shadow-sm space-y-4">
+                <div>
+                  <h3 className="text-lg font-medium mb-2">Checkout não configurado</h3>
+                  <p className="text-sm text-zinc-400">
+                    Sincronize com a Cakto para criar o produto e o checkout automaticamente, usando o preço de R$ {(product.priceCents / 100).toFixed(2)}.
+                  </p>
+                </div>
+                <div className="pt-2 flex gap-3">
+                  <form action={syncProductWithCaktoAction.bind(null, id)}>
+                    <Button type="submit">Sincronizar com Cakto</Button>
+                  </form>
+                  <Link href={`/offers/${offer.id}/checkout`}>
+                    <Button variant="secondary">Registrar manualmente</Button>
+                  </Link>
+                </div>
+              </div>
             ) : (
               <EmptyState
                 icon={CreditCard}
                 title="Checkout não configurado"
-                description="Configure a URL do checkout para começar a vender."
-                action={{ label: "Editar Produto", href: `/products/${id}/edit` }}
+                description="Crie uma oferta antes de configurar o checkout."
+                action={{ label: "Criar Oferta", href: "/product-factory" }}
               />
             )
           )}

@@ -92,6 +92,37 @@ export async function listCaktoProducts(organizationId: string): Promise<CaktoPr
   return data.results || data;
 }
 
+export async function createCaktoProduct(
+  organizationId: string,
+  productData: {
+    name: string;
+    description?: string;
+    price: number;
+  }
+): Promise<CaktoProduct> {
+  const accessToken = await getCaktoAccessToken(organizationId);
+
+  const response = await fetch("https://api.cakto.com.br/public_api/products/", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      name: productData.name,
+      description: productData.description || productData.name,
+      price: productData.price,
+      type: "unique",
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to create Cakto product");
+  }
+
+  return response.json();
+}
+
 export async function createCaktoOffer(
   organizationId: string,
   offerData: {
