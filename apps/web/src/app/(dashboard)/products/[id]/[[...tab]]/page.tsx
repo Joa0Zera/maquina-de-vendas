@@ -12,15 +12,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { DashboardCard } from "@/components/ui/dashboard-card";
-import { MetricCard } from "@/components/ui/metric-card";
 import { EmptyState } from "@/components/ui/empty-state";
-import { CheckCircle2, Circle, Package, FileText, Globe, CreditCard, Copy, Users, Brain, TrendingUp, Settings } from "lucide-react";
+import { Package, FileText, Globe, CreditCard, Copy, Users, Brain, Clock } from "lucide-react";
 import { WorkspaceSidebar } from "@/components/workspace/workspace-sidebar";
 import { LaunchScore } from "@/components/workspace/launch-score";
 import { ProjectChecklist } from "@/components/workspace/project-checklist";
 import { ContextualRecommendation } from "@/components/launch/contextual-recommendation";
 
-type PageProps = { params: Promise<{ id: string; tab?: string }> };
+type PageProps = { params: Promise<{ id: string; tab?: string[] }> };
 
 async function ProductDetailContent({ id, organizationId, tab }: { id: string; organizationId: string; tab?: string }) {
   // Fetch product
@@ -135,11 +134,12 @@ async function ProductDetailContent({ id, organizationId, tab }: { id: string; o
   }
 
   const activeTab = tab || "resumo";
+  const knownTabs = ["resumo", "produto", "oferta", "landing", "checkout", "copy", "organic", "ia", "configuracoes"];
 
   return (
     <div className="flex h-screen overflow-hidden">
       <WorkspaceSidebar productId={id} productName={product.title} />
-      
+
       <main className="flex-1 overflow-y-auto">
         <div className="p-8 animate-in fade-in slide-in-from-right-4 duration-300">
           {activeTab === "resumo" && (
@@ -424,7 +424,7 @@ async function ProductDetailContent({ id, organizationId, tab }: { id: string; o
             )
           )}
 
-          {activeTab === "distribuicao" && (
+          {activeTab === "organic" && (
             organic ? (
               <div className="border border-zinc-800 rounded-xl p-6 bg-zinc-950 shadow-sm space-y-4">
                 <div>
@@ -447,7 +447,7 @@ async function ProductDetailContent({ id, organizationId, tab }: { id: string; o
             )
           )}
 
-          {activeTab === "inteligencia" && (
+          {activeTab === "ia" && (
             intelligence ? (
               <div className="border border-zinc-800 rounded-xl p-6 bg-zinc-950 shadow-sm space-y-4">
                 <div>
@@ -483,6 +483,15 @@ async function ProductDetailContent({ id, organizationId, tab }: { id: string; o
               </div>
             </div>
           )}
+
+          {!knownTabs.includes(activeTab) && (
+            <EmptyState
+              icon={Clock}
+              title="Em breve"
+              description="Esta seção ainda está em desenvolvimento."
+              action={{ label: "Voltar ao resumo", href: `/products/${id}` }}
+            />
+          )}
         </div>
       </main>
     </div>
@@ -495,7 +504,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
 
   return (
     <Suspense fallback={<div className="text-zinc-400">Carregando...</div>}>
-      <ProductDetailContent id={id} organizationId={organizationId} tab={tab} />
+      <ProductDetailContent id={id} organizationId={organizationId} tab={tab?.[0]} />
     </Suspense>
   );
 }
