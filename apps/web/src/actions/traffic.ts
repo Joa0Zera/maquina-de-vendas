@@ -62,7 +62,7 @@ export async function generateTrafficResearchAction(productId: string) {
   redirect(`/products/${productId}/traffic`);
 }
 
-function generateTrafficResearchData(
+export function generateTrafficResearchData(
   productName: string,
   productDescription: string
 ) {

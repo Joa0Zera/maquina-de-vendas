@@ -1,10 +1,11 @@
-import { db, launchEvents, offers, products } from "@maquina/database";
+import { db, launchEvents, offers, products, trafficResearch } from "@maquina/database";
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { generateProductFromTrend } from "@/lib/product-generator";
-import { generateCopyAssetsAction } from "@/actions/copy";
-import { generateOrganicDistributionAction } from "@/actions/organic-distribution";
-import { generateIntelligenceReportAction } from "@/actions/intelligence";
+import { generateTrafficResearchData } from "@/actions/traffic";
+import { generateCopyAssetsCore } from "@/actions/copy";
+import { generateOrganicDistributionCore } from "@/actions/organic-distribution";
+import { generateIntelligenceReportCore } from "@/actions/intelligence";
 
 export interface FactoryInput {
   organizationId: string;
@@ -31,6 +32,7 @@ export class FactoryRunner {
       { name: "Trend", status: "pending" },
       { name: "Produto", status: "pending" },
       { name: "Oferta", status: "pending" },
+      { name: "Tráfego", status: "pending" },
       { name: "Copy", status: "pending" },
       { name: "Distribuição", status: "pending" },
       { name: "Inteligência", status: "pending" },
@@ -136,9 +138,27 @@ export class FactoryRunner {
 
       if (steps[2]) steps[2].status = "completed";
 
-      // Step 4: Copy
+      // Step 4: Traffic research (required by copy generation below)
       if (steps[3]) steps[3].status = "running";
-      await generateCopyAssetsAction(productId);
+      const researchData = generateTrafficResearchData(product.title, product.description || "");
+      await db.insert(trafficResearch).values({
+        organizationId: input.organizationId,
+        productId,
+        ...researchData,
+      });
+
+      await db.insert(launchEvents).values({
+        organizationId: input.organizationId,
+        productId,
+        eventType: "TRAFFIC_CREATED",
+        description: "Traffic research generated from factory",
+      });
+
+      if (steps[3]) steps[3].status = "completed";
+
+      // Step 5: Copy
+      if (steps[4]) steps[4].status = "running";
+      await generateCopyAssetsCore(productId, input.organizationId);
 
       await db.insert(launchEvents).values({
         organizationId: input.organizationId,
@@ -147,33 +167,33 @@ export class FactoryRunner {
         description: "Copy assets generated from factory",
       });
 
-      if (steps[3]) steps[3].status = "completed";
+      if (steps[4]) steps[4].status = "completed";
 
-      // Step 5: Organic Distribution
-      if (steps[4]) steps[4].status = "running";
-      await generateOrganicDistributionAction(productId);
+      // Step 6: Organic Distribution
+      if (steps[5]) steps[5].status = "running";
+      await generateOrganicDistributionCore(productId, input.organizationId);
 
       await db.insert(launchEvents).values({
         organizationId: input.organizationId,
         productId,
-        eventType: "TRAFFIC_CREATED",
+        eventType: "ORGANIC_CREATED",
         description: "Organic distribution generated from factory",
       });
 
-      if (steps[4]) steps[4].status = "completed";
+      if (steps[5]) steps[5].status = "completed";
 
-      // Step 6: Intelligence
-      if (steps[5]) steps[5].status = "running";
-      await generateIntelligenceReportAction(productId);
+      // Step 7: Intelligence
+      if (steps[6]) steps[6].status = "running";
+      await generateIntelligenceReportCore(productId, input.organizationId);
 
       await db.insert(launchEvents).values({
         organizationId: input.organizationId,
         productId,
-        eventType: "V0_CREATED",
+        eventType: "INTELLIGENCE_CREATED",
         description: "Intelligence report generated from factory",
       });
 
-      if (steps[5]) steps[5].status = "completed";
+      if (steps[6]) steps[6].status = "completed";
 
       // Revalidate paths
       revalidatePath("/products");

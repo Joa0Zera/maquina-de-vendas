@@ -8,7 +8,16 @@ import { requireOrganization } from "@/lib/session";
 
 export async function generateIntelligenceReportAction(productId: string) {
   const { organizationId } = await requireOrganization();
+  await generateIntelligenceReportCore(productId, organizationId);
 
+  revalidatePath(`/products/${productId}`);
+  revalidatePath(`/products/${productId}/intelligence`);
+  revalidatePath(`/launches`);
+
+  redirect(`/products/${productId}/intelligence`);
+}
+
+export async function generateIntelligenceReportCore(productId: string, organizationId: string) {
   // Fetch product
   const [product] = await db
     .select({
@@ -116,11 +125,6 @@ export async function generateIntelligenceReportAction(productId: string) {
     });
   }
 
-  revalidatePath(`/products/${productId}`);
-  revalidatePath(`/products/${productId}/intelligence`);
-  revalidatePath(`/launches`);
-
-  redirect(`/products/${productId}/intelligence`);
 }
 
 function generateIntelligenceReport(

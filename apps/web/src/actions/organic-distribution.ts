@@ -8,7 +8,16 @@ import { requireOrganization } from "@/lib/session";
 
 export async function generateOrganicDistributionAction(productId: string) {
   const { organizationId } = await requireOrganization();
+  await generateOrganicDistributionCore(productId, organizationId);
 
+  revalidatePath(`/products/${productId}`);
+  revalidatePath(`/products/${productId}/organic`);
+  revalidatePath(`/launches`);
+
+  redirect(`/products/${productId}/organic`);
+}
+
+export async function generateOrganicDistributionCore(productId: string, organizationId: string) {
   // Fetch product
   const [product] = await db
     .select({
@@ -96,11 +105,6 @@ export async function generateOrganicDistributionAction(productId: string) {
     });
   }
 
-  revalidatePath(`/products/${productId}`);
-  revalidatePath(`/products/${productId}/organic`);
-  revalidatePath(`/launches`);
-
-  redirect(`/products/${productId}/organic`);
 }
 
 function generateOrganicDistribution(

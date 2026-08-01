@@ -8,7 +8,16 @@ import { requireOrganization } from "@/lib/session";
 
 export async function generateCopyAssetsAction(productId: string) {
   const { organizationId } = await requireOrganization();
+  await generateCopyAssetsCore(productId, organizationId);
 
+  revalidatePath(`/products/${productId}`);
+  revalidatePath(`/products/${productId}/copy`);
+  revalidatePath(`/launches`);
+
+  redirect(`/products/${productId}/copy`);
+}
+
+export async function generateCopyAssetsCore(productId: string, organizationId: string) {
   // Fetch product
   const [product] = await db
     .select({
@@ -81,11 +90,6 @@ export async function generateCopyAssetsAction(productId: string) {
     });
   }
 
-  revalidatePath(`/products/${productId}`);
-  revalidatePath(`/products/${productId}/copy`);
-  revalidatePath(`/launches`);
-
-  redirect(`/products/${productId}/copy`);
 }
 
 function generateCopyAssetsData(
