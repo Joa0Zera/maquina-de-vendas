@@ -6,14 +6,14 @@ export async function GET(request: NextRequest) {
     const startTime = Date.now();
 
     // Test the AI provider
-    const isConnected = await aiProvider.test("gemini");
+    const isConnected = await aiProvider.test();
 
     const executionTime = Date.now() - startTime;
 
     return NextResponse.json({
       connected: isConnected,
-      provider: "gemini",
-      model: "gemini-2.0-flash",
+      provider: "claude",
+      model: "claude-sonnet-4-5-20250929",
       executionTime,
       tokens: {
         promptTokens: 0,
@@ -22,11 +22,11 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Gemini test error:", error);
+    console.error("Claude test error:", error);
     return NextResponse.json(
       {
         connected: false,
-        error: "Failed to test Gemini connection",
+        error: "Failed to test Claude connection",
       },
       { status: 500 }
     );

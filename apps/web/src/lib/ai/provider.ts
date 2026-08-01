@@ -1,5 +1,6 @@
 import { AIProvider, AIOptions } from "./types";
 import { GeminiProvider } from "./gemini";
+import { ClaudeProvider } from "./claude";
 
 class AIProviderManager {
   private providers: Map<string, AIProvider> = new Map();
@@ -11,10 +12,15 @@ class AIProviderManager {
 
   private initializeProviders(): void {
     const geminiApiKey = process.env.GEMINI_API_KEY;
-    
     if (geminiApiKey) {
-      const geminiProvider = new GeminiProvider(geminiApiKey);
-      this.providers.set("gemini", geminiProvider);
+      this.providers.set("gemini", new GeminiProvider(geminiApiKey));
+    }
+
+    // Pronto para uso quando fizer sentido migrar: basta setar
+    // ANTHROPIC_API_KEY e trocar defaultProvider para "claude".
+    const anthropicApiKey = process.env.ANTHROPIC_API_KEY;
+    if (anthropicApiKey) {
+      this.providers.set("claude", new ClaudeProvider(anthropicApiKey));
     }
   }
 
