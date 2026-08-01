@@ -2,7 +2,7 @@ import { db, launchEvents, offers, products, trafficResearch } from "@maquina/da
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { generateProductFromTrend } from "@/lib/product-generator";
-import { generateTrafficResearchData } from "@/actions/traffic";
+import { generateTrafficResearchData } from "@/lib/traffic-research-data";
 import { generateCopyAssetsCore } from "@/actions/copy";
 import { generateOrganicDistributionCore } from "@/actions/organic-distribution";
 import { generateIntelligenceReportCore } from "@/actions/intelligence";
