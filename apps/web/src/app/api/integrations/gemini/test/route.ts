@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       connected: isConnected,
       provider: "gemini",
-      model: "gemini-2.5-flash",
+      model: "gemini-2.0-flash",
       executionTime,
       tokens: {
         promptTokens: 0,

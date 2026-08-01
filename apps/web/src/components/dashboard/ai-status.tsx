@@ -17,7 +17,7 @@ export function AIStatus() {
   const [status, setStatus] = useState<AIStatusData>({
     provider: "Gemini",
     status: "testing",
-    model: "gemini-2.5-flash",
+    model: "gemini-2.0-flash",
     lastExecution: "-",
     averageTime: 0,
     tokensUsed: 0,
@@ -36,7 +36,7 @@ export function AIStatus() {
       setStatus({
         provider: "Gemini",
         status: data.connected ? "connected" : "disconnected",
-        model: "gemini-2.5-flash",
+        model: "gemini-2.0-flash",
         lastExecution: new Date().toLocaleTimeString(),
         averageTime: data.executionTime || 0,
         tokensUsed: data.tokens?.totalTokens || 0,

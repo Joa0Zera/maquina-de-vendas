@@ -78,12 +78,14 @@ export class CaktoClient {
   async health(): Promise<CaktoHealthResponse> {
     try {
       await this.ensureAuthenticated();
-      
-      const response = await this.request<CaktoHealthResponse>("/health");
+
+      // A Cakto não expõe um endpoint de health check dedicado — usar
+      // /public_api/products/ (paginado) só para confirmar que o token
+      // autentica e tem permissão de leitura.
+      const response = await this.request<{ count?: number }>("/public_api/products/");
       return {
         connected: true,
-        account: response.account,
-        products: response.products,
+        products: response.count,
       };
     } catch (error) {
       console.error("Cakto health check error:", error);
