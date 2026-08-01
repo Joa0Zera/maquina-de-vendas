@@ -67,6 +67,12 @@ export function TrendCard({ trend }: TrendCardProps) {
           >
             Editar
           </Link>
+          <Link
+            href={`/products/new?trendId=${trend.id}`}
+            className="inline-flex h-8 items-center rounded-md bg-zinc-100 px-3 text-xs font-medium text-zinc-900 hover:bg-zinc-200"
+          >
+            Criar Produto
+          </Link>
         </div>
       </div>
     </Card>

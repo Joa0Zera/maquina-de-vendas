@@ -1,4 +1,4 @@
-import { db, launchEvents, offers, products, trafficResearch } from "@maquina/database";
+import { db, launchEvents, offers, products, trafficResearch, trends } from "@maquina/database";
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { generateProductFromTrend } from "@/lib/product-generator";
@@ -41,13 +41,27 @@ export class FactoryRunner {
     let productId: string;
 
     try {
-      // Step 1: Trend (skip for now, requires trends table)
+      // Step 1: Trend
+      let trend = null;
+      if (input.trendId) {
+        [trend] = await db
+          .select()
+          .from(trends)
+          .where(and(eq(trends.id, input.trendId), eq(trends.organizationId, input.organizationId)))
+          .limit(1);
+
+        if (!trend) {
+          throw new Error("Trend not found");
+        }
+      }
       if (steps[0]) steps[0].status = "completed";
 
       // Step 2: Product
       if (steps[1]) steps[1].status = "running";
       let generated;
-      if (input.theme) {
+      if (trend) {
+        generated = generateProductFromTrend(trend);
+      } else if (input.theme) {
         generated = {
           productName: input.theme,
           headline: `Descubra ${input.theme}`,
@@ -57,7 +71,7 @@ export class FactoryRunner {
           subheadline: `O guia definitivo sobre ${input.theme}`,
           bigPromise: `Transforme sua vida com ${input.theme}`,
           uniqueMechanism: "Metodologia passo a passo",
-          objectionHandling: "Simples e prático",
+          objectionHandling: ["Simples e prático"],
           guarantee: "30 dias de garantia",
           offerStack: ["Ebook principal", "Checklists", "Templates"],
           ebookStructure: ["Introdução", "Fundamentos", "Técnicas Avançadas", "Casos de Estudo"],
