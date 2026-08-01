@@ -123,6 +123,33 @@ export async function createCaktoProduct(
   return response.json();
 }
 
+export async function getCaktoProductOffers(
+  organizationId: string,
+  caktoProductId: string
+): Promise<CaktoOfferResponse[]> {
+  const accessToken = await getCaktoAccessToken(organizationId);
+
+  const response = await fetch(
+    `https://api.cakto.com.br/public_api/offers/?product=${caktoProductId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to list Cakto offers");
+  }
+
+  const data = await response.json();
+  const results = data.results || data;
+  return results.map((offer: any) => ({
+    ...offer,
+    checkoutUrl: `https://pay.cakto.com.br/${offer.id}`,
+  }));
+}
+
 export async function createCaktoOffer(
   organizationId: string,
   offerData: {

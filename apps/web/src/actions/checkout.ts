@@ -5,7 +5,7 @@ import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireOrganization } from "@/lib/session";
-import { createCaktoOffer, createCaktoProduct } from "@/lib/cakto";
+import { createCaktoOffer, createCaktoProduct, getCaktoProductOffers } from "@/lib/cakto";
 
 export async function registerCheckoutAction(offerId: string, formData: FormData) {
   const { organizationId } = await requireOrganization();
@@ -98,12 +98,11 @@ export async function syncProductWithCaktoAction(productId: string) {
       .where(and(eq(products.id, productId), eq(products.organizationId, organizationId)));
   }
 
-  // Cria a oferta (checkout) vinculada ao produto na Cakto
-  const caktoOffer = await createCaktoOffer(organizationId, {
-    name: offer.name,
-    price,
-    caktoProductId,
-  });
+  // A Cakto já cria uma oferta padrão (com checkout) automaticamente ao
+  // criar o produto — reaproveita ela em vez de tentar criar outra.
+  const existingOffers = await getCaktoProductOffers(organizationId, caktoProductId);
+  const caktoOffer = existingOffers.find((o: any) => o.default) || existingOffers[0]
+    || await createCaktoOffer(organizationId, { name: offer.name, price, caktoProductId });
 
   await db
     .update(offers)
