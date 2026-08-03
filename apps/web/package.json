@@ -12,6 +12,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.32.1",
     "@better-auth/drizzle-adapter": "^1.4.7",
+    "pdf-lib": "^1.17.1",
     "@hookform/resolvers": "^5.0.1",
     "@maquina/database": "workspace:*",
     "@maquina/shared": "workspace:*",

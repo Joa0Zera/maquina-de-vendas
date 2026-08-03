@@ -56,6 +56,12 @@ export default async function EbookDetailPage({ params }: PageProps) {
           <Badge variant="default" className={statusColors[ebook.status]}>
             {statusLabels[ebook.status]}
           </Badge>
+          <a
+            href={`/api/ebooks/${ebook.id}/pdf`}
+            className="inline-flex h-9 items-center rounded-md bg-zinc-100 px-4 text-sm font-medium text-zinc-900 hover:bg-zinc-200"
+          >
+            Baixar PDF
+          </a>
           <Link
             href="/ebooks"
             className="inline-flex h-9 items-center rounded-md border border-zinc-800 bg-zinc-900 px-4 text-sm text-zinc-300 hover:bg-zinc-800"
