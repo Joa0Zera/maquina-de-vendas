@@ -39,6 +39,7 @@ export default async function EbookDetailPage({ params }: PageProps) {
     chapters: Array<{
       chapterTitle: string;
       chapterSummary: string;
+      content?: string;
     }>;
   } || {};
 
@@ -81,7 +82,11 @@ export default async function EbookDetailPage({ params }: PageProps) {
                   <h3 className="font-semibold text-zinc-200 mb-2">
                     Capítulo {index + 1}: {chapter.chapterTitle}
                   </h3>
-                  <p className="text-sm text-zinc-400">{chapter.chapterSummary}</p>
+                  {chapter.content ? (
+                    <p className="text-sm text-zinc-400 whitespace-pre-line leading-relaxed">{chapter.content}</p>
+                  ) : (
+                    <p className="text-sm text-zinc-400">{chapter.chapterSummary}</p>
+                  )}
                 </div>
               ))
             ) : (

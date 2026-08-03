@@ -4,7 +4,7 @@ import { db, ebooks, offers } from "@maquina/database";
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { generateEbookFromOffer } from "@/lib/ebook-generator";
+import { generateEbookContentWithAI } from "@/lib/ebook-ai-generator";
 import { requireOrganization } from "@/lib/session";
 
 export async function generateEbookFromOfferAction(offerId: string) {
@@ -21,8 +21,8 @@ export async function generateEbookFromOfferAction(offerId: string) {
     throw new Error("Offer not found");
   }
 
-  // Generate ebook structure
-  const ebookStructure = generateEbookFromOffer(offer);
+  // Generate ebook content using AI (falls back to templates on failure)
+  const ebookStructure = await generateEbookContentWithAI(offer);
 
   // Create the ebook
   const [ebook] = await db
